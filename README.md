@@ -20,14 +20,15 @@ b. Handle multiple windows from same application
 ## Proposed usage/commands
 ```
 Usage:
-  stagehand [command]
+    stagehand                     Opens specified applications and moves their windows
+    stagehand [command]           Executes command as described below
 
 Available Commands:
-  add    [application]          Add a new application
-  record [application]          records desired position of application window
-  remove [application]          removes application from list
-  list                          List all applications to open
-  position [application]        moves application window to defined position
+    add    [application]          Add a new application
+    record [application]          records desired position of application window
+    remove [application]          removes application from list
+    list                          List all applications to open
+    position [application]        moves application window to defined position
 
 Use "stagehand [command] --help" for more information about a command.
 
