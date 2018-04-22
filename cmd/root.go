@@ -14,13 +14,13 @@ package cmd
 
 import (
 	"fmt"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"os/user"
 
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
 )
 
 var rootCmd = &cobra.Command{
@@ -34,6 +34,7 @@ var rootCmd = &cobra.Command{
 type Application struct {
 	Name string `yaml:"name"`
 	File string `yaml:"file"`
+	Pos  []int  `yaml:"pos"`
 }
 
 // Execute is the main function for Cobra
@@ -45,24 +46,25 @@ func Execute() {
 }
 
 func openAllApplications(cmd *cobra.Command, args []string) {
-	as := parseYaml(defaultFile())
+	f, err := ioutil.ReadFile(FileName())
+	if err != nil {
+		fmt.Println("File read error:", err)
+		os.Exit(1)
+	}
+	as := parseYaml(f)
 	for _, app := range as {
 		openApp(app)
 	}
 }
 
-func defaultFile() []byte {
+// FileName currently returns the default filename but will eventually determine the filename based on input
+func FileName() string {
 	u, err := user.Current()
 	if err != nil {
 		fmt.Println("User error:", err)
 		os.Exit(1)
 	}
-	f, err := ioutil.ReadFile(u.HomeDir + "/stagehand/workspaces/main.yml")
-	if err != nil {
-		fmt.Println("File read error:", err)
-		os.Exit(1)
-	}
-	return f
+	return u.HomeDir + "/stagehand/workspaces/main.yml"
 }
 
 func parseYaml(f []byte) []Application {

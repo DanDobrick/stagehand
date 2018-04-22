@@ -46,27 +46,21 @@ Usage:
     stagehand [command]           Executes command as described below
 
 Available Commands:
-    add    [application]          Add a new application
+    add    [application]          Add a new application to YAML file
     record [application]          records desired position of application window
-    remove [application]          removes application from list
-    list                          List all applications to open
+    remove [application]          removes application from YAML file
     position [application]        moves application window to defined position
 
 Use "stagehand [command] --help" for more information about a command.
 
 $ stagehand add Terminal
-Added "Terminal" to list of applications to open.
+Added "Terminal" to YAML file <filename>
 
 $ stagehand record Terminal
 Saved current position of "Terminal" window
 
 $ stagehand remove Terminal
-Removed "Terminal" to list of applications to open.
-
-$ stagehand list
-Stagehand will open the following applications:
-1. Terminal
-2. Sublime
+Removed "Terminal" from YAML file <filename>
 
 $ stagehand position Terminal
 "Terminal" window moved to desired location

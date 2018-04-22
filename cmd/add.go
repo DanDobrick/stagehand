@@ -14,6 +14,8 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -23,10 +25,25 @@ var addCmd = &cobra.Command{
 	Short: "Adds a new application to the list of applications to open",
 	Long:  `Desc here`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Add command called")
+		addApplication(args[0], args[1])
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+}
+
+func addApplication(n string, f string) {
+	d := `- name: ` + n + `
+- file: ` + f
+
+	file, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
+	defer file.Close()
+	if err != nil {
+		fmt.Println("ERROR", err)
+	}
+	_, err = file.WriteString(d)
+	if err != nil {
+		fmt.Println("ERROR", err)
+	}
 }
