@@ -1,21 +1,43 @@
 # Stagehand
 
-A command-line tool to open applications and position windows based on recorded preferences
+Stagehand is a command-line tool to open applications and position windows based on recorded preferences.
 
-Will be built in stages, starting with small features and slowly adding features from the TODO list
+## Quickstart
+
+To start using stagehand, first install stagehand using `go get`:
+
+```bash
+go get -u github.com/spf13/cobra/cobra
+```
+
+Then create `~/stagehand/workspaces/main.yml` which will store the configuration for your main workspace.
+
+```yaml
+[
+  name: <Application Name>
+]
+```
+
+See `main.yaml.example`
+
+If the file doesn't exist or does not contain at least one application name, stagehand will exit with an error message
 
 ## TODO
-1. Basic cobra skeleton
-2. Open terminal
-3. Position terminal window based on YAML file (handle multiple screens?)
-4. Enable arbitrary applications to be opened via YAML file
-5. Replace YAML file with `add` command and a database
-6. Record window position with command line (Is this possible?)
-7. Implement `position` command.
+Currently being built in stages, starting with small features and slowly adding features from the TODO list
+
+1. ~~Basic cobra skeleton~~
+2. ~~Open terminal~~
+3. ~~Enable arbitrary applications to be opened via YAML file~~
+4. Position terminal window based on YAML file (handle multiple screens?)
+5. Update YAML file with `add` command
+6. Implement `position` command.
+7. Record window position with command line (Is this possible?)
+8. Allow user to specify yaml filename (still in directory)
+9. Allow user to specify default directory for yaml files
+  - My idea was to write something to the default yaml file telling the program to look elsewhere
 
 Eventually
-a. Allow multiple sets of applications
-b. Handle multiple windows from same application
+a. Handle multiple windows from same application
 
 ## Proposed usage/commands
 ```

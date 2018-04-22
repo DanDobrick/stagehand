@@ -9,12 +9,16 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
 package cmd
 
 import (
 	"fmt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/user"
 
 	"github.com/spf13/cobra"
 )
@@ -22,8 +26,14 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "stagehand",
 	Short: "A command-line tool to open applications and position windows based on recorded preferences",
-	Long:  `Creates a boltDb that stores the applications and commands to execute in sequence.`,
+	Long:  `Will open the applications specified in the yaml file`,
 	Run:   openAllApplications,
+}
+
+// Application is a struct to hold information for each application to be opened
+type Application struct {
+	Name string `yaml:"name"`
+	File string `yaml:"file"`
 }
 
 // Execute is the main function for Cobra
@@ -35,10 +45,48 @@ func Execute() {
 }
 
 func openAllApplications(cmd *cobra.Command, args []string) {
-	osCmd := exec.Command("open", "-a", "Terminal", ".")
-	a, err := osCmd.CombinedOutput()
+	as := parseYaml(defaultFile())
+	for _, app := range as {
+		openApp(app)
+	}
+}
+
+func defaultFile() []byte {
+	u, err := user.Current()
+	if err != nil {
+		fmt.Println("User error:", err)
+		os.Exit(1)
+	}
+	f, err := ioutil.ReadFile(u.HomeDir + "/stagehand/workspaces/main.yml")
+	if err != nil {
+		fmt.Println("File read error:", err)
+		os.Exit(1)
+	}
+	return f
+}
+
+func parseYaml(f []byte) []Application {
+	var apps []Application
+	err := yaml.Unmarshal(f, &apps)
+	if err != nil {
+		fmt.Println("Yaml Error:", err)
+		os.Exit(1)
+	}
+	return apps
+}
+
+func openApp(app Application) {
+	var osCmd *exec.Cmd
+
+	if app.File != "" {
+		osCmd = exec.Command("open", "-a", app.Name, app.File)
+	} else {
+		osCmd = exec.Command("open", "-a", app.Name)
+	}
+	output, err := osCmd.CombinedOutput()
 
 	if err != nil {
-		fmt.Println("Error:", err, string(a))
+		fmt.Println("Error opening application:", err, string(output))
+		os.Exit(1)
 	}
 }

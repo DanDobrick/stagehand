@@ -1,0 +1,4 @@
+- name: Terminal
+  file: "."
+- name: Mail
+- name: Slack
