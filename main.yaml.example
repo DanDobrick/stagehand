@@ -1,4 +1,6 @@
 - name: Terminal
-  file: "."
-- name: Mail
+  file: /Users/FrodoBaggins/stagehand
+  pos: 600, 400, 300, 400
 - name: Slack
+  pos: 0, 0, 1280, 800
+- name: Mail
