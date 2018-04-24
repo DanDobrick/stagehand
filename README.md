@@ -1,6 +1,6 @@
 # Stagehand
 
-Stagehand is a command-line tool to open applications and position windows based on recorded preferences.
+Stagehand is a WIP command-line tool to open applications and position windows based on recorded preferences.
 
 ## Quickstart
 
@@ -22,7 +22,9 @@ After `stagehand` is installed you need to create `~/stagehand/workspaces/main.y
 
 See `main.yaml.example` for concrete examples
 
-If the file doesn't exist or does not contain at least one application name, stagehand will exit with an error message
+If the file doesn't exist or does not contain at least one application name, stagehand will exit with an error message.
+
+You can get the position of your current program with the command `stagehand record "App name"` and save that to your yaml file.
 
 # Positioning Error
 There are two reasons that you will receive an error with the "See 'README.md#Positioning Error' for more info" message:
@@ -37,12 +39,12 @@ Currently being built in stages, starting with small features and slowly adding 
 3. ~~Enable arbitrary applications to be opened via YAML file~~
 4. ~~Position terminal window based on YAML file~~
 5. ~Update YAML file with `add` command~
-6. Implement `position` command.
-7. "Not scriptable" positioning and directions to README
-7. Add testing
-8. Record window position with command line
-9. Allow user to specify yaml filename (still in directory)
-10. Allow user to specify default directory for yaml files
+6. Record window position with command line
+7. Implement `position` command.
+8. "Not scriptable" positioning and directions to README
+9. Add testing
+10. Allow user to specify yaml filename (still in directory)
+11. Allow user to specify default directory for yaml files
   - My idea was to write something to the default yaml file telling the program to look elsewhere
 
 Eventually
@@ -64,7 +66,7 @@ Available Commands:
 Use "stagehand [command] --help" for more information about a command.
 
 $ stagehand record Terminal
-Saved current position of "Terminal" window
+1680, 0, 3600, 1080
 
 $ stagehand remove Terminal
 Removed "Terminal" from YAML file <filename>
