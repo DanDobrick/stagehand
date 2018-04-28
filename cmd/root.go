@@ -29,11 +29,17 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "stagehand",
 	Short: "A command-line tool to open applications and position windows based on recorded preferences",
-	Long:  `Will open the applications specified in the yaml file`,
+	Long:  `Will open and position the applications specified in the yaml file`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var wg sync.WaitGroup
+		apps, err := parseYaml(FileName())
 
-		for _, app := range parseYaml(FileName()) {
+		if err != nil {
+			fmt.Println("Yaml parsing error", err)
+			os.Exit(1)
+		}
+
+		var wg sync.WaitGroup
+		for _, app := range apps {
 			wg.Add(1)
 			go openAndPosition(app, &wg)
 		}
@@ -59,25 +65,24 @@ func FileName() string {
 	return u.HomeDir + "/stagehand/workspaces/main.yml"
 }
 
-func parseYaml(filePath string) []models.Application {
+func parseYaml(filePath string) ([]models.Application, error) {
 	var apps []models.Application
 
 	f, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		fmt.Println("File read error:", err)
-		os.Exit(1)
+		return apps, err
 	}
 
 	err = yaml.Unmarshal(f, &apps)
-	if err != nil {
-		fmt.Println("Yaml Error:", err)
-		os.Exit(1)
-	}
-	return apps
+	return apps, err
 }
 
 func openAndPosition(app models.Application, wg *sync.WaitGroup) {
-	app.Open()
+	output, err := app.Open()
+	if err != nil {
+		fmt.Println("Error opening application:", app.Name, err, string(output))
+		os.Exit(1)
+	}
 	count := 0
 	for count < 7 {
 		app.Position()

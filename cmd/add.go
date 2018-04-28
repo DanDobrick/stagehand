@@ -14,8 +14,10 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
 
+	"github.com/DanDobrick/stagehand/models"
 	"github.com/spf13/cobra"
 )
 
@@ -23,26 +25,41 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add [application]",
 	Short: "Adds a new application to the list of applications to open",
-	Long:  `Desc here`,
+	Long: `Appends application information to ~/stagehand/workspaces/main.yaml.
+	
+If you want to specify a file and/or position for the window, you will need to use the "-f" and "-p" flags.
+
+EXAMPLE:
+stagehand add APP NAME -f Filename -p 0 0 800 600`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		addApplication(args[0], args[1])
+		file, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
+		defer file.Close()
+
+		if err != nil {
+			fmt.Println("Error opening file", err)
+		}
+
+		addApplication(args, file)
 	},
 }
 
+var file string
+var pos string
+
 func init() {
 	rootCmd.AddCommand(addCmd)
+	addCmd.Flags().StringVarP(&file, "file", "f", file, "Adds file to application")
+	addCmd.Flags().StringVarP(&pos, "pos", "p", pos, "Adds bounds to application")
 }
 
-func addApplication(n string, f string) {
-	d := `- name: ` + n + `
-- file: ` + f
-
-	file, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
-	defer file.Close()
-	if err != nil {
-		fmt.Println("ERROR", err)
+func addApplication(args []string, writer io.Writer) {
+	app := models.Application{
+		Name:   args[0],
+		File:   file,
+		Bounds: pos,
 	}
-	_, err = file.WriteString(d)
+	_, err := writer.Write([]byte(app.Yamlize()))
 	if err != nil {
 		fmt.Println("ERROR", err)
 	}
