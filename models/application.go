@@ -15,7 +15,7 @@ type Application struct {
 }
 
 // Open opens the application using system calls
-func (app Application) Open() {
+func (app Application) Open() ([]byte, error) {
 	var osCmd *exec.Cmd
 
 	if app.File != "" {
@@ -24,11 +24,7 @@ func (app Application) Open() {
 		osCmd = exec.Command("open", "-a", app.Name)
 	}
 
-	output, err := osCmd.CombinedOutput()
-	if err != nil {
-		fmt.Println("Error opening application:", app.Name, err, string(output))
-		os.Exit(1)
-	}
+	return osCmd.CombinedOutput()
 }
 
 // Position positions the application using osascript
@@ -61,13 +57,14 @@ func (app Application) RequestBounds() string {
 // Yamlize turns the properties in the application into YAML for writing to workspace file
 func (app Application) Yamlize() string {
 	var t []string
-	t = append(t, "- name: "+ app.Name)
+	t = append(t, "- name: "+app.Name)
+
+	if app.File != "" {
+		t = append(t, "  file: "+app.File)
+	}
 
 	if app.Bounds != "" {
-		t = append(t, "- pos: " + app.Bounds)
+		t = append(t, "  pos: "+app.Bounds)
 	}
-	if app.File != "" {
-		t = append(t, "- file: " + app.File)
-	}
-	return strings.Join(t, "\n")
+	return strings.Join(t, "\n") + "\n"
 }

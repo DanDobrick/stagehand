@@ -24,23 +24,15 @@ import (
 var recordCmd = &cobra.Command{
 	Use:   "record",
 	Short: "returns the current position information for specified application",
-	Long: `eventually this will contain a flag that lets you save this information to the yaml file`,
+	Long:  `eventually this will contain a flag that lets you save this information to the yaml file`,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		a := models.Application{ Name: args[0] }
+		a := models.Application{Name: args[0]}
 		fmt.Println(a.RequestBounds())
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(recordCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// recordCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
 	recordCmd.Flags().BoolP("save", "s", false, "Saves application bounds to YAML file (does not overwrite)")
 }
