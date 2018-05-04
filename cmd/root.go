@@ -14,6 +14,7 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -31,8 +32,15 @@ var rootCmd = &cobra.Command{
 	Short: "A command-line tool to open applications and position windows based on recorded preferences",
 	Long:  `Will open and position the applications specified in the yaml file`,
 	Run: func(cmd *cobra.Command, args []string) {
-		apps, err := parseYaml(FileName())
+		file, err := os.Open(FileName())
+		defer file.Close()
 
+		if err != nil {
+			fmt.Println("Error opening file", err)
+			os.Exit(1)
+		}
+
+		apps, err := parseYaml(file)
 		if err != nil {
 			fmt.Println("Yaml parsing error", err)
 			os.Exit(1)
@@ -65,10 +73,10 @@ func FileName() string {
 	return u.HomeDir + "/stagehand/workspaces/main.yml"
 }
 
-func parseYaml(filePath string) ([]models.Application, error) {
+func parseYaml(reader io.Reader) ([]models.Application, error) {
 	var apps []models.Application
 
-	f, err := ioutil.ReadFile(filePath)
+	f, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return apps, err
 	}

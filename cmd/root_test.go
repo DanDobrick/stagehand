@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -19,7 +20,16 @@ func TestFileName(t *testing.T) {
 //TestParseYaml uses yaml in /testdata
 func TestParseYaml(t *testing.T) {
 	filepath := filepath.Join("..", "testdata", "test_yaml.yaml")
-	result, _ := parseYaml(filepath)
+	file, err := os.Open(filepath)
+	if err != nil {
+		t.Errorf("Error opening test file", err)
+	}
+
+	result, err := parseYaml(file)
+	if err != nil {
+		t.Errorf("Expected parseYaml not to error, got %v", err)
+	}
+
 	app1 := models.Application{
 		Name:   "ApplicationName",
 		File:   "File",
