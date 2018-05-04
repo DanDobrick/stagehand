@@ -9,7 +9,7 @@ import (
 )
 
 func TestFileName(t *testing.T) {
-	expectedPath := "/stagehand/workspaces/main.yml"
+	expectedPath := "/.stagehand/workspaces/main.yml"
 	result := FileName()
 	resultPath := result[len(result)-len(expectedPath):]
 	if resultPath != expectedPath {

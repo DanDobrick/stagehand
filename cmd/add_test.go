@@ -25,10 +25,9 @@ func TestAddApplication(t *testing.T) {
 	buffer.Reset()
 	// Sets filename via the "file" flag
 	addCmd.Flags().Set("file", "File Name")
-	// Sets bounds via the "pos" flag
-	addCmd.Flags().Set("pos", "1 2 3 4")
+	// TODO ADD TEST FOR REQUESTING POSITION; NEED TO MOCK OUT COMMAND LINE RESPONSE
 
-	ss := []string{appName, "  file: File Name", "  pos: 1 2 3 4"}
+	ss := []string{appName, "  file: File Name"}
 	expected := strings.Join(ss, "\n") + "\n"
 
 	addApplication(args, &buffer)

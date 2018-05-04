@@ -12,7 +12,7 @@ go get -u github.com/DanDobrick/
 
 Installing go is out of the scope of these instructions, visit https://golang.org/doc/install#install for more information.
 
-After `stagehand` is installed you need to create `~/stagehand/workspaces/main.yml` which will store the configuration for your main workspace. Add applications to `main.yaml` in the following way:
+After `stagehand` is installed you need to create `~/.stagehand/workspaces/main.yml` which will store the configuration for your main workspace. Add applications to `main.yaml` in the following way:
 
 ```yaml
 - name: application name

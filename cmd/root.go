@@ -70,7 +70,7 @@ func FileName() string {
 		fmt.Println("User error:", err)
 		os.Exit(1)
 	}
-	return u.HomeDir + "/stagehand/workspaces/main.yml"
+	return u.HomeDir + "/.stagehand/workspaces/main.yml"
 }
 
 func parseYaml(reader io.Reader) ([]models.Application, error) {
