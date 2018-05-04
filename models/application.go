@@ -54,6 +54,10 @@ func (app Application) RequestBounds() string {
 	return string(op)
 }
 
+func (app *Application) RecordBounds() {
+	app.Bounds = app.RequestBounds()
+}
+
 // Yamlize turns the properties in the application into YAML for writing to workspace file
 func (app Application) Yamlize() string {
 	var t []string

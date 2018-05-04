@@ -27,10 +27,11 @@ var addCmd = &cobra.Command{
 	Short: "Adds a new application to the list of applications to open",
 	Long: `Appends application information to ~/stagehand/workspaces/main.yaml.
 	
-If you want to specify a file and/or position for the window, you will need to use the "-f" and "-p" flags.
+If you want to specify a file for the application to open, you will need to use the "-f" flag.
+To record the current window position use the "-p" flag.
 
 EXAMPLE:
-stagehand add APP NAME -f Filename -p 0 0 800 600`,
+stagehand add APP NAME -f Filename`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		file, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
@@ -45,19 +46,21 @@ stagehand add APP NAME -f Filename -p 0 0 800 600`,
 }
 
 var file string
-var pos string
+var pos bool
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-	addCmd.Flags().StringVarP(&file, "file", "f", file, "Adds file to application")
-	addCmd.Flags().StringVarP(&pos, "pos", "p", pos, "Adds bounds to application")
+	addCmd.Flags().StringVarP(&file, "file", "f", file, "Adds specified file to application")
+	addCmd.Flags().BoolVarP(&pos, "pos", "p", false, "Records application bounds")
 }
 
 func addApplication(args []string, writer io.Writer) {
 	app := models.Application{
-		Name:   args[0],
-		File:   file,
-		Bounds: pos,
+		Name: args[0],
+		File: file,
+	}
+	if pos == true {
+		app.RecordBounds()
 	}
 	_, err := writer.Write([]byte(app.Yamlize()))
 	if err != nil {
