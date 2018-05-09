@@ -7,7 +7,7 @@ import (
 var testApp = Application{
 	Name:   "App name",
 	File:   "File Name",
-	Bounds: "Bounds",
+	Bounds: "1, 2, 3, 4",
 }
 
 func TestOpen(t *testing.T) {
@@ -22,10 +22,30 @@ func TestRequestBounds(t *testing.T) {
 	// Figure out testing exec.command
 }
 
+func TestPos(t *testing.T) {
+	// TODO: test app not having bounds set and mock response from RequestBounds()
+	expected := testApp.Bounds[:4]
+	result := testApp.Pos()
+
+	if result != expected {
+		t.Errorf("Expected: %s, got %s", expected, result)
+	}
+}
+
+func TestSize(t *testing.T) {
+	// TODO: test app not having bounds set and mock response from RequestBounds()
+	result := testApp.Size()
+	expected := testApp.Bounds[6:]
+
+	if result != expected {
+		t.Errorf("Expected: \"%s\", got \"%s\"", expected, result)
+	}
+}
+
 func TestYamlize(t *testing.T) {
 	expectedString := `- name: App name
   file: File Name
-  pos: Bounds
+  pos: 1, 2, 3, 4
 `
 	result := testApp.Yamlize()
 

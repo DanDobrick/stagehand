@@ -43,6 +43,26 @@ func (app Application) Position() string {
 	return string(op)
 }
 
+func (app *Application) RecordBounds() {
+	app.Bounds = app.RequestBounds()
+}
+
+func (app Application) Pos() string {
+	if app.Bounds == "" {
+		app.RecordBounds()
+	}
+	s := strings.Split(app.Bounds, ", ")[:2]
+	return s[0] + ", " + s[1]
+}
+
+func (app Application) Size() string {
+	if app.Bounds == "" {
+		app.RecordBounds()
+	}
+	s := strings.Split(app.Bounds, ", ")[2:]
+	return s[0] + ", " + s[1]
+}
+
 // RequestBounds requests current bounds of the application window using osacript
 func (app Application) RequestBounds() string {
 	command := "tell application \"" + app.Name + "\" to tell window 1 to get bounds"
@@ -52,10 +72,6 @@ func (app Application) RequestBounds() string {
 		os.Exit(1)
 	}
 	return string(op)
-}
-
-func (app *Application) RecordBounds() {
-	app.Bounds = app.RequestBounds()
 }
 
 // Yamlize turns the properties in the application into YAML for writing to workspace file

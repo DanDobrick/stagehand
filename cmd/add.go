@@ -26,7 +26,7 @@ var addCmd = &cobra.Command{
 	Use:   "add [application]",
 	Short: "Adds a new application to the list of applications to open",
 	Long: `Appends application information to ~/stagehand/workspaces/main.yaml.
-	
+
 If you want to specify a file for the application to open, you will need to use the "-f" flag.
 To record the current window position use the "-p" flag.
 
@@ -34,14 +34,14 @@ EXAMPLE:
 stagehand add APP NAME -f Filename`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		file, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
-		defer file.Close()
+		configFile, err := os.OpenFile(FileName(), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 644)
+		defer configFile.Close()
 
 		if err != nil {
 			fmt.Println("Error opening file", err)
 		}
 
-		addApplication(args, file)
+		addApplication(args, configFile)
 	},
 }
 

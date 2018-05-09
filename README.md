@@ -24,7 +24,11 @@ See `main.yaml.example` for concrete examples
 
 If the file doesn't exist or does not contain at least one application name, stagehand will exit with an error message.
 
-You can get the position of your current program with the command `stagehand record "App name"` and save that to your yaml file.
+If you want stagehand to add applications for you use the `add` command with the optional `-p` flag to save the position.
+```bash
+$ stagehand add "My Application"
+$ stagehand add -p AppWithPosition
+```
 
 # Positioning Error
 There are two reasons that you will receive an error with the "See 'README.md#Positioning Error' for more info" message:
